@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" sizes="512x512" href="icon3.png" />
+  <title>BloxyBuy - Grow A Garden</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+    body {
+      background-color: #6a51db; /* entire section bg */
+      font-family: 'Poppins', sans-serif;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      position: relative;
+      background-color: #4b3eaf;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+    }
+    header h1 {
+      flex-shrink: 0;
+      font-size: 2rem;
+      font-weight: 600;
+      color: white;
+      z-index: 2;
+    }
+  nav {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 2rem;
+      font-weight: 600;
+      z-index: 1;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.1rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: background-color 0.2s ease;
+    }
+    nav a:hover {
+      background-color: #332a7b;
+    }
+
+
+    main {
+      flex-grow: 1;
+      padding: 3rem 1rem 5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .hero h2 {
+      font-weight: 700;
+      font-size: 2.5rem;
+    }
+
+    .shop-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      padding: 2rem;
+      background-color: #6a51db;
+      border-radius: 12px;
+    }
+
+    .item-card {
+      background: #4d4c52;
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: white;
+    }
+    .item-card img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      flex-shrink: 0;
+      object-fit: contain;
+      max-height: 180px;
+    }
+    .item-card h3 {
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      font-size: 1.4rem;
+    }
+    .item-card p {
+      flex-grow: 1;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      line-height: 1.3;
+    }
+    .btn-buy {
+      background-color: #332a7b;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+      font-size: 1rem;
+    }
+    .btn-buy:hover {
+      background-color: #251e5a;
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex: 2;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 1000;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+
+    /* Modal Content */
+    .modal-content {
+      background-color: #4b3eaf;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 700px;
+      display: flex;
+      overflow: hidden;
+      animation: slideFadeIn 0.4s ease forwards;
+      position: relative;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+    }
+
+    /* Left Image Section */
+    .modal-left {
+      flex: 1 1 45%;
+      background-color: #3a2f8b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .modal-left img {
+      max-width: 100%;
+      border-radius: 8px;
+      object-fit: contain;
+    }
+
+    /* Vertical separator */
+    .modal-separator {
+      width: 3px;
+      background: #332a7b;
+    }
+
+    /* Right Content Section */
+    .modal-right {
+      flex: 1 1 55%;
+      padding: 2rem 2rem 2rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: white;
+    }
+
+    .modal-right h3 {
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+    .modal-right p {
+      flex-grow: 1;
+      font-size: 1rem;
+      line-height: 1.4;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-input-group {
+      margin-bottom: 1.5rem;
+    }
+    .modal-input-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .modal-input-group input {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      border-radius: 6px;
+      border: none;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+    }
+    .modal-btn-buy {
+      background-color: #332a7b;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.15s ease;
+    }
+    .modal-btn-buy:hover {
+      background-color: #251e5a;
+    }
+    .modal-btn-cancel {
+      background-color: transparent;
+      border: 2px solid white;
+      padding: 0.75rem 1.3rem;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .modal-btn-cancel:hover {
+      background-color: white;
+      color: #4b3eaf;
+    }
+
+    /* Close Button */
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      color: white;
+      cursor: pointer;
+      font-weight: 700;
+      line-height: 1;
+      padding: 0;
+      transition: color 0.2s ease;
+      user-select: none;
+    }
+    .modal-close:hover {
+      color: #251e5a;
+    }
+
+    /* Animations */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Hero animation */
+.hero h2 {
+  animation: slideIn 0.8s ease-out forwards;
+}
+
+/* Shop item animation */
+.item-card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.8s ease forwards;
+}
+
+/* Stagger animation delay */
+.item-card:nth-child(1) { animation-delay: 0.1s; }
+.item-card:nth-child(2) { animation-delay: 0.3s; }
+.item-card:nth-child(3) { animation-delay: 0.5s; }
+
+/* Buy button hover pop effect */
+.btn-buy:hover,
+.modal-btn-buy:hover,
+.modal-btn-cancel:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+}
+
+/* Modal animation override */
+.modal-content {
+  animation: popIn 0.4s ease forwards;
+}
+
+
+    /* Animations */
+    @keyframes slideFadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .modal-content {
+        flex-direction: column;
+      }
+      .modal-left,
+      .modal-right {
+        flex: none;
+        width: 100%;
+        padding: 1rem 1.5rem;
+      }
+      .modal-separator {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  
+
+  <header>
+    <img src="icon3.png" alt="BloxyBuy Icon" style="height: 32px; width: 32px; object-fit: contain;">
+    <h1>BloxyBuy</h1>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="shop.html">Shop</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h2>Grow a Garden Shop</h2>
+    </section>
+
+    <section class="shop-items">
+      <article class="item-card" data-id="1" data-title="Garden Starter Pack" data-desc="Everything you need to kick off your garden adventure." data-img="https://assets-prd.ignimgs.com/2025/05/19/growagarden-1747688567733.jpg?crop=1%3A1%2Csmart&format=jpg&auto=webp&quality=80">
+        <img src="https://assets-prd.ignimgs.com/2025/05/19/growagarden-1747688567733.jpg?crop=1%3A1%2Csmart&format=jpg&auto=webp&quality=80" alt="Garden Starter Pack" />
+        <h3>Garden Starter Pack</h3>
+        <p>Everything you need to kick off your garden adventure.</p>
+        <button class="btn-buy">Buy Now</button>
+      </article>
+
+      <article class="item-card" data-id="2" data-title="Rare Seed Bundle" data-desc="Collect rare seeds to grow unique plants and flowers." data-img="https://assets-prd.ignimgs.com/2025/05/19/growagarden-1747688567733.jpg?crop=1%3A1%2Csmart&format=jpg&auto=webp&quality=80">
+        <img src="https://assets-prd.ignimgs.com/2025/05/19/growagarden-1747688567733.jpg?crop=1%3A1%2Csmart&format=jpg&auto=webp&quality=80" alt="Rare Seed Bundle" />
+        <h3>Rare Seed Bundle</h3>
+        <p>Collect rare seeds to grow unique plants and flowers.</p>
+        <button class="btn-buy">Buy Now</button>
+      </article>
+
+      <article class="item-card" data-id="3" data-title="Fertilizer Mega Pack" data-desc="Boost your plant growth with premium fertilizer." data-img="https://assets-prd.ignimgs.com/2025/05/19/growagarden-1747688567733.jpg?crop=1%3A1%2Csmart&format=jpg&auto=webp&quality=80">
+        <img src="https://assets-prd.ignimgs.com/2025/05/19/growagarden-1747688567733.jpg?crop=1%3A1%2Csmart&format=jpg&auto=webp&quality=80" alt="Fertilizer Mega Pack" />
+        <h3>Fertilizer Mega Pack</h3>
+        <p>Boost your plant growth with premium fertilizer.</p>
+        <button class="btn-buy">Buy Now</button>
+      </article>
+    </section>
+  </main>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="productModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc">
+    <div class="modal-content">
+      <button class="modal-close" aria-label="Close modal">&times;</button>
+      <div class="modal-left">
+        <img src="" alt="" id="modalImg" />
+      </div>
+      <div class="modal-separator"></div>
+      <div class="modal-right">
+        <h3 id="modalTitle"></h3>
+        <p id="modalDesc"></p>
+        <div class="modal-input-group">
+          <label for="robloxUsername">Roblox Username</label>
+          <input type="text" id="robloxUsername" placeholder="Enter your Roblox username" />
+        </div>
+        <div class="modal-buttons">
+          <button class="modal-btn-cancel">Cancel</button>
+          <button class="modal-btn-buy">Confirm Purchase</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <script>
+    // Elements
+    const modal = document.getElementById('productModal');
+    const modalImg = modal.querySelector('#modalImg');
+    const modalTitle = modal.querySelector('#modalTitle');
+    const modalDesc = modal.querySelector('#modalDesc');
+    const robloxUsernameInput = modal.querySelector('#robloxUsername');
+    const buyButtons = document.querySelectorAll('.btn-buy');
+    const cancelBtn = modal.querySelector('.modal-btn-cancel');
+    const closeBtn = modal.querySelector('.modal-close');
+
+    // Open modal and fill info
+    buyButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const card = button.closest('.item-card');
+        modalImg.src = card.dataset.img;
+        modalImg.alt = card.dataset.title;
+        modalTitle.textContent = card.dataset.title;
+        modalDesc.textContent = card.dataset.desc;
+        robloxUsernameInput.value = '';
+        modal.classList.add('active');
+        robloxUsernameInput.focus();
+      });
+    });
+
+    // Close modal handlers
+    cancelBtn.addEventListener('click', () => {
+      modal.classList.remove('active');
+    });
+    closeBtn.addEventListener('click', () => {
+      modal.classList.remove('active');
+    });
+
+    // Confirm purchase button (just closes modal for now)
+    modal.querySelector('.modal-btn-buy').addEventListener('click', () => {
+      const username = robloxUsernameInput.value.trim();
+      if (!username) {
+        alert('Please enter your Roblox username.');
+        robloxUsernameInput.focus();
+        return;
+      }
+      alert(`Thank you for your purchase, ${username}!`);
+      modal.classList.remove('active');
+    });
+
+    // Close modal on outside click
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.remove('active');
+      }
+    });
+
+    // Accessibility: Close modal on Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        modal.classList.remove('active');
+      }
+    });
+
+        
+  </script>
+</body>
+</html>

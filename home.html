@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" type="image/png" sizes="512x512" href="icon3.png" />
+  <title>BloxyBuy - GAG and PS99 Shop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Poppins', sans-serif; background: #f9f9f9; color: #333; }
+
+    header {
+      background-color: #4b3eaf;
+      color: white;
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    .header-left h1 {
+      font-size: 2rem;
+    }
+
+    .header-center {
+      flex: 2;
+      display: flex;
+      justify-content: center;
+    }
+
+    .header-right {
+      flex: 1;
+    }
+
+    nav {
+      display: flex;
+      gap: 2rem;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* --- Static backgrounds on hero and games --- */
+    .hero {
+      padding: 4rem 2rem;
+      text-align: center;
+      color: white;
+      background-color: #6a51db;
+    }
+
+    .games {
+      padding: 3rem 2rem;
+      text-align: center;
+      color: white;
+      background: #6a51db;
+    }
+
+    /* --- Animate only text inside hero --- */
+    .hero h2,
+    .hero p,
+    .hero .btn {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1s ease-out forwards;
+    }
+
+    .hero p {
+      animation-delay: 0.2s;
+    }
+
+    .hero .btn {
+      animation-delay: 0.4s;
+    }
+
+    .hero h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .btn {
+      background-color: #05023b;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.15s ease;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #3730a3;
+    }
+
+    .games h3 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1s ease-out forwards;
+    }
+
+    /* --- Grid for game cards --- */
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* --- Animate each game card --- */
+    .game {
+      background: #4d4c52;
+      color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      padding: 1rem;
+      opacity: 0;
+      transform: translateY(30px);
+      animation-name: fadeInUp;
+      animation-duration: 0.8s;
+      animation-fill-mode: forwards;
+      animation-timing-function: ease;
+    }
+
+    /* Stagger delays for game cards */
+    .game:nth-child(1) { animation-delay: 0.2s; }
+    .game:nth-child(2) { animation-delay: 0.4s; }
+
+    .game img {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    .game h4 {
+      margin: 1rem 0 0.5rem;
+      font-size: 1.3rem;
+    }
+
+    footer {
+      background-color: #6346e5;
+      color: white;
+      text-align: center;
+      padding: 3rem;
+      margin-top: 0;
+    }
+
+    /* Modal styles with animation */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .modal.fade-out {
+      animation: fadeOut 0.3s ease forwards;
+    }
+
+    .modal-content {
+      background-color: #6a51db;
+      padding: 2rem;
+      border-radius: 12px;
+      text-align: center;
+      color: white;
+      max-width: 600px;
+      width: 90%;
+      position: relative;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: slideUp 0.4s ease forwards;
+    }
+
+    .modal.fade-out .modal-content {
+      animation: slideDown 0.3s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+
+    @keyframes slideUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .shop-options {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .shop-card {
+      flex: 1;
+      min-width: 200px;
+      max-width: 240px;
+      background-color: #4d4c52;
+      padding: 1rem;
+      border-radius: 12px;
+    }
+
+    .shop-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .shop-card .label {
+      margin: 1rem 0;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .shop-card button {
+      background-color: #05023b;
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s ease;
+    }
+
+    .shop-card button:hover {
+      background-color: #3730a3;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 1.5rem;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+
+  <script>
+    function openShopModal() {
+      const modal = document.getElementById("shopModal");
+      modal.classList.remove("fade-out");
+      modal.style.display = "flex";
+    }
+
+    function closeShopModal() {
+      const modal = document.getElementById("shopModal");
+      modal.classList.add("fade-out");
+      setTimeout(() => {
+        modal.style.display = "none";
+        modal.classList.remove("fade-out");
+      }, 300);
+    }
+
+    function goToGame(page) {
+      window.location.href = page + ".html";
+    }
+  </script>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <img src="icon3.png" alt="BloxyBuy Icon" style="height: 32px; width: 32px; object-fit: contain;">
+      <h1>BloxyBuy</h1>
+    </div>
+    <div class="header-center">
+      <nav>
+        <a href="#">Home</a>
+        <a onclick="openShopModal()">Shop</a>
+      </nav>
+    </div>
+    <div class="header-right"></div>
+  </header>
+
+  <section class="hero">
+    <h2>In-Game Items. Dirt Cheap. Worldwide.</h2>
+    <p>We deliver premium items for Pet Simulator 99 and Grow a Garden — at the lowest prices on Earth!</p>
+    <a class="btn" onclick="openShopModal()">Start Shopping</a>
+  </section>
+
+  <section class="games">
+    <h3>Our Games:</h3>
+    <div class="game-grid">
+      <div class="game">
+        <img src="https://bigblog-storage.s3.us-east-1.amazonaws.com/gameicon_PS_99_update04_1024x_b402703873.png" alt="Pet Simulator 99">
+        <h4>Pet Simulator 99</h4>
+        <p>Huge pets, Titanic Pets, Exclusive Eggs & more!</p>
+      </div>
+      <div class="game">
+        <img src="https://assets-prd.ignimgs.com/2025/05/19/growagarden-1747688567733.jpg?crop=1%3A1%2Csmart&format=jpg&auto=webp&quality=80" alt="Grow a Garden">
+        <h4>Grow a Garden</h4>
+        <p>Pets, Sheckles and more!!</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 BloxyBuy. Cheapest items in the entire world. Guaranteed.</p>
+  </footer>
+
+  <!-- Shop Modal -->
+  <div id="shopModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeShopModal()">&times;</span>
+      <h2>Select a Shop</h2>
+      <div class="shop-options">
+        <div class="shop-card">
+          <img src="https://bigblog-storage.s3.us-east-1.amazonaws.com/gameicon_PS_99_update04_1024x_b402703873.png" alt="PS99">
+          <div class="label">PS99</div>
+          <button onclick="goToGame('ps99')">Go to PS99 Shop</button>
+        </div>
+        <div class="shop-card">
+          <img src="https://assets-prd.ignimgs.com/2025/05/19/growagarden-1747688567733.jpg?crop=1%3A1%2Csmart&format=jpg&auto=webp&quality=80" alt="GAG">
+          <div class="label">Grow a Garden</div>
+          <button onclick="goToGame('growagarden')">Go to GAG Shop</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
